@@ -2,6 +2,10 @@
 
 A professional CLI tool for analyzing code complexity metrics in Python and C codebases. Helps identify overly complex functions that may need refactoring.
 
+![Language](https://img.shields.io/badge/language-Python-blue)
+![Version](https://img.shields.io/badge/version-0.2.0-green)
+![License](https://img.shields.io/badge/license-MIT-orange)
+
 ## Features
 
 ### Core Analysis
@@ -17,23 +21,70 @@ A professional CLI tool for analyzing code complexity metrics in Python and C co
 - **Customizable Thresholds** - Set your own warning levels for each metric
 - **Warnings-Only Mode** - Focus on problematic functions that need attention
 
-## Installation
+## Quick Start
 
 ### Prerequisites
 - Python 3.10 or higher
-- [uv](https://github.com/astral-sh/uv) package manager
+- [uv](https://github.com/astral-sh/uv) package manager (recommended) or pip
 
-### Install from source
+### Installation
+
+**Option 1: Install with uv (Recommended)**
 ```bash
 # Clone the repository
 git clone https://github.com/peekdylan/codecomplexity.git
 cd codecomplexity
 
-# Install with uv (Python support only)
+# Install the package
 uv pip install -e .
 
-# Install with C language support (optional)
+# For C language support (optional)
 uv pip install -e ".[c-support]"
+```
+
+**Option 2: Install with pip**
+```bash
+# Clone the repository
+git clone https://github.com/peekdylan/codecomplexity.git
+cd codecomplexity
+
+# Install the package
+pip install -e .
+
+# For C language support (optional)
+pip install -e ".[c-support]"
+```
+
+### Try It Immediately
+```bash
+# Analyze a single Python file
+uv run codecomplexity analyze yourfile.py
+
+# Scan an entire project
+uv run codecomplexity scan /path/to/project
+
+# Analyze a C file
+uv run codecomplexity analyze yourfile.c
+
+# Export results to JSON
+uv run codecomplexity analyze yourfile.py --output results.json
+
+# See the tool analyze itself!
+uv run codecomplexity scan codecomplexity
+```
+
+**Expected output:**
+```
+================================================================================
+PROJECT COMPLEXITY ANALYSIS
+================================================================================
+
+PROJECT SUMMARY
+--------------------------------------------------------------------------------
+Total Files Analyzed: 6
+Total Functions: 45
+Average Complexity: 2.64
+Highest Complexity: 16
 ```
 
 ## Usage
@@ -250,6 +301,7 @@ codecomplexity-project/
 │   ├── scanner.py           # Directory scanning
 │   └── cli.py               # Command-line interface
 ├── pyproject.toml           # Project configuration
+├── requirements.txt         # Dependencies
 ├── README.md
 └── .gitignore
 ```
@@ -264,6 +316,9 @@ uv run codecomplexity analyze codecomplexity/cli.py
 
 # Scan the entire project
 uv run codecomplexity scan codecomplexity
+
+# Export analysis
+uv run codecomplexity scan codecomplexity --output self-analysis.json
 ```
 
 ### Adding New Features
@@ -361,7 +416,7 @@ This is a personal portfolio project, but suggestions are welcome! Feel free to:
 
 ## Author
 
-**Dylan** - Boot.dev Student
+**Dylan** - [Boot.dev](https://boot.dev) Student
 
 Built as an independent project to demonstrate:
 - Software architecture and design
@@ -369,6 +424,8 @@ Built as an independent project to demonstrate:
 - CLI tool development
 - Multi-language parsing
 - Professional documentation practices
+
+View my other projects and code quality analysis: [CODE_QUALITY.md](CODE_QUALITY.md)
 
 ## License
 
@@ -393,3 +450,13 @@ MIT License - Free to use for learning and portfolio purposes.
   - Python complexity analysis
   - Colorized terminal output
   - Customizable thresholds
+
+---
+
+**Ready to improve your code quality?** Clone and start analyzing today!
+```bash
+git clone https://github.com/peekdylan/codecomplexity.git
+cd codecomplexity
+uv pip install -e .
+uv run codecomplexity scan your-project/
+```
