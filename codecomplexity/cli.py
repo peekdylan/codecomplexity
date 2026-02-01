@@ -10,6 +10,7 @@ Last Modified: January 31, 2026
 """
 
 import sys
+import json
 import argparse
 from pathlib import Path
 from typing import List
@@ -36,6 +37,7 @@ def create_parser() -> argparse.ArgumentParser:
         argparse.ArgumentParser: Configured argument parser
         
     Created: January 31, 2026
+    Last Modified: January 31, 2026
     """
     parser = argparse.ArgumentParser(
         prog='codecomplexity',
@@ -88,6 +90,14 @@ def create_parser() -> argparse.ArgumentParser:
         '--warnings-only',
         action='store_true',
         help='Only show functions that exceed thresholds'
+    )
+    
+    # Optional: export results to JSON
+    analyze_parser.add_argument(
+        '--output',
+        '-o',
+        type=str,
+        help='Export results to JSON file (e.g., --output results.json)'
     )
     
     return parser
@@ -176,7 +186,7 @@ def format_metrics_output(
         lines.append(f"{func_color}Function: {func.name} (line {func.lineno}){warning}")
         lines.append(f"{Fore.CYAN}{'-' * 80}")
         
-        # Cyclomatic complexity
+        # Cyclomatic Complexity
         if has_high_complexity:
             complexity_color = Fore.RED
             complexity_status = "HIGH"
@@ -249,6 +259,64 @@ def format_metrics_output(
     return "\n".join(lines)
 
 
+def export_to_json(
+    metrics: List[FunctionMetrics],
+    filepath: Path,
+    output_file: str
+) -> None:
+    """
+    Export function metrics to a JSON file.
+    
+    This function converts the metrics data into a structured JSON format
+    that can be consumed by other tools, CI/CD pipelines, or dashboards.
+    
+    JSON Structure:
+    {
+        "file": "path/to/file.py",
+        "timestamp": "2026-01-31T20:00:00",
+        "summary": {...},
+        "functions": [...]
+    }
+    
+    Args:
+        metrics: List of FunctionMetrics objects to export
+        filepath: Path to the analyzed file
+        output_file: Path where JSON should be written
+        
+    Created: January 31, 2026
+    """
+    # Calculate summary statistics
+    avg_complexity = sum(m.cyclomatic_complexity for m in metrics) / len(metrics) if metrics else 0
+    max_complexity = max((m.cyclomatic_complexity for m in metrics), default=0)
+    
+    # Build the JSON structure
+    data = {
+        "file": str(filepath),
+        "timestamp": __import__('datetime').datetime.now().isoformat(),
+        "summary": {
+            "total_functions": len(metrics),
+            "average_complexity": round(avg_complexity, 2),
+            "highest_complexity": max_complexity
+        },
+        "functions": [
+            {
+                "name": m.name,
+                "line_number": m.lineno,
+                "cyclomatic_complexity": m.cyclomatic_complexity,
+                "lines_of_code": m.lines_of_code,
+                "max_nesting_depth": m.max_nesting_depth
+            }
+            for m in metrics
+        ]
+    }
+    
+    # Write to file with nice formatting
+    with open(output_file, 'w', encoding='utf-8') as f:
+        json.dump(data, f, indent=2)
+    
+    print(f"{Fore.GREEN}✓ Results exported to {output_file}{Style.RESET_ALL}")
+
+
 def analyze_command(args: argparse.Namespace) -> int:
     """
     Execute the 'analyze' command.
@@ -263,6 +331,7 @@ def analyze_command(args: argparse.Namespace) -> int:
         int: Exit code (0 for success, 1 for error)
         
     Created: January 31, 2026
+    Last Modified: January 31, 2026
     """
     # Convert the filepath string to a Path object
     filepath = Path(args.filepath)
@@ -287,7 +356,11 @@ def analyze_command(args: argparse.Namespace) -> int:
         print(f"{Fore.CYAN}Analyzing {filepath}...{Style.RESET_ALL}\n")
         metrics = analyze_python_file(filepath)
         
-        # Format and display the results
+        # If JSON output requested, export to file
+        if args.output:
+            export_to_json(metrics, filepath, args.output)
+        
+        # Always show the terminal output
         output = format_metrics_output(
             metrics,
             args.complexity_threshold,
