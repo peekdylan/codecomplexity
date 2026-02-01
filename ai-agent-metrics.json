@@ -1,0 +1,333 @@
+{
+  "timestamp": "2026-02-01T17:58:53.715637",
+  "summary": {
+    "total_files": 17,
+    "total_functions": 26,
+    "average_complexity": 3.31,
+    "highest_complexity": 16
+  },
+  "files": [
+    {
+      "file": "/Users/dylanpeek/ai-agent/calculator/main.py",
+      "summary": {
+        "total_functions": 1,
+        "average_complexity": 4.0,
+        "highest_complexity": 4
+      },
+      "functions": [
+        {
+          "name": "main",
+          "line_number": 8,
+          "cyclomatic_complexity": 4,
+          "lines_of_code": 17,
+          "max_nesting_depth": 0
+        }
+      ]
+    },
+    {
+      "file": "/Users/dylanpeek/ai-agent/calculator/pkg/calculator.py",
+      "summary": {
+        "total_functions": 4,
+        "average_complexity": 4.0,
+        "highest_complexity": 9
+      },
+      "functions": [
+        {
+          "name": "__init__",
+          "line_number": 2,
+          "cyclomatic_complexity": 1,
+          "lines_of_code": 13,
+          "max_nesting_depth": 0
+        },
+        {
+          "name": "evaluate",
+          "line_number": 16,
+          "cyclomatic_complexity": 3,
+          "lines_of_code": 5,
+          "max_nesting_depth": 0
+        },
+        {
+          "name": "_evaluate_infix",
+          "line_number": 22,
+          "cyclomatic_complexity": 9,
+          "lines_of_code": 22,
+          "max_nesting_depth": 0
+        },
+        {
+          "name": "_apply_operator",
+          "line_number": 49,
+          "cyclomatic_complexity": 3,
+          "lines_of_code": 9,
+          "max_nesting_depth": 0
+        }
+      ]
+    },
+    {
+      "file": "/Users/dylanpeek/ai-agent/calculator/pkg/render.py",
+      "summary": {
+        "total_functions": 1,
+        "average_complexity": 3.0,
+        "highest_complexity": 3
+      },
+      "functions": [
+        {
+          "name": "format_json_output",
+          "line_number": 6,
+          "cyclomatic_complexity": 3,
+          "lines_of_code": 10,
+          "max_nesting_depth": 0
+        }
+      ]
+    },
+    {
+      "file": "/Users/dylanpeek/ai-agent/calculator/tests.py",
+      "summary": {
+        "total_functions": 10,
+        "average_complexity": 1.0,
+        "highest_complexity": 1
+      },
+      "functions": [
+        {
+          "name": "setUp",
+          "line_number": 8,
+          "cyclomatic_complexity": 1,
+          "lines_of_code": 2,
+          "max_nesting_depth": 0
+        },
+        {
+          "name": "test_addition",
+          "line_number": 11,
+          "cyclomatic_complexity": 1,
+          "lines_of_code": 3,
+          "max_nesting_depth": 0
+        },
+        {
+          "name": "test_subtraction",
+          "line_number": 15,
+          "cyclomatic_complexity": 1,
+          "lines_of_code": 3,
+          "max_nesting_depth": 0
+        },
+        {
+          "name": "test_multiplication",
+          "line_number": 19,
+          "cyclomatic_complexity": 1,
+          "lines_of_code": 3,
+          "max_nesting_depth": 0
+        },
+        {
+          "name": "test_division",
+          "line_number": 23,
+          "cyclomatic_complexity": 1,
+          "lines_of_code": 3,
+          "max_nesting_depth": 0
+        },
+        {
+          "name": "test_nested_expression",
+          "line_number": 27,
+          "cyclomatic_complexity": 1,
+          "lines_of_code": 3,
+          "max_nesting_depth": 0
+        },
+        {
+          "name": "test_complex_expression",
+          "line_number": 31,
+          "cyclomatic_complexity": 1,
+          "lines_of_code": 3,
+          "max_nesting_depth": 0
+        },
+        {
+          "name": "test_empty_expression",
+          "line_number": 35,
+          "cyclomatic_complexity": 1,
+          "lines_of_code": 3,
+          "max_nesting_depth": 0
+        },
+        {
+          "name": "test_invalid_operator",
+          "line_number": 39,
+          "cyclomatic_complexity": 1,
+          "lines_of_code": 3,
+          "max_nesting_depth": 0
+        },
+        {
+          "name": "test_not_enough_operands",
+          "line_number": 43,
+          "cyclomatic_complexity": 1,
+          "lines_of_code": 3,
+          "max_nesting_depth": 0
+        }
+      ]
+    },
+    {
+      "file": "/Users/dylanpeek/ai-agent/call_function.py",
+      "summary": {
+        "total_functions": 1,
+        "average_complexity": 4.0,
+        "highest_complexity": 4
+      },
+      "functions": [
+        {
+          "name": "call_function",
+          "line_number": 30,
+          "cyclomatic_complexity": 4,
+          "lines_of_code": 36,
+          "max_nesting_depth": 0
+        }
+      ]
+    },
+    {
+      "file": "/Users/dylanpeek/ai-agent/functions/get_file_content.py",
+      "summary": {
+        "total_functions": 1,
+        "average_complexity": 5.0,
+        "highest_complexity": 5
+      },
+      "functions": [
+        {
+          "name": "get_file_content",
+          "line_number": 23,
+          "cyclomatic_complexity": 5,
+          "lines_of_code": 23,
+          "max_nesting_depth": 0
+        }
+      ]
+    },
+    {
+      "file": "/Users/dylanpeek/ai-agent/functions/get_files_info.py",
+      "summary": {
+        "total_functions": 1,
+        "average_complexity": 5.0,
+        "highest_complexity": 5
+      },
+      "functions": [
+        {
+          "name": "get_files_info",
+          "line_number": 22,
+          "cyclomatic_complexity": 5,
+          "lines_of_code": 29,
+          "max_nesting_depth": 0
+        }
+      ]
+    },
+    {
+      "file": "/Users/dylanpeek/ai-agent/functions/run_python_file.py",
+      "summary": {
+        "total_functions": 1,
+        "average_complexity": 14.0,
+        "highest_complexity": 14
+      },
+      "functions": [
+        {
+          "name": "run_python_file",
+          "line_number": 30,
+          "cyclomatic_complexity": 14,
+          "lines_of_code": 46,
+          "max_nesting_depth": 0
+        }
+      ]
+    },
+    {
+      "file": "/Users/dylanpeek/ai-agent/functions/write_file.py",
+      "summary": {
+        "total_functions": 1,
+        "average_complexity": 4.0,
+        "highest_complexity": 4
+      },
+      "functions": [
+        {
+          "name": "write_file",
+          "line_number": 26,
+          "cyclomatic_complexity": 4,
+          "lines_of_code": 25,
+          "max_nesting_depth": 0
+        }
+      ]
+    },
+    {
+      "file": "/Users/dylanpeek/ai-agent/main.py",
+      "summary": {
+        "total_functions": 1,
+        "average_complexity": 16.0,
+        "highest_complexity": 16
+      },
+      "functions": [
+        {
+          "name": "main",
+          "line_number": 11,
+          "cyclomatic_complexity": 16,
+          "lines_of_code": 142,
+          "max_nesting_depth": 0
+        }
+      ]
+    },
+    {
+      "file": "/Users/dylanpeek/ai-agent/test_get_file_content.py",
+      "summary": {
+        "total_functions": 1,
+        "average_complexity": 2.0,
+        "highest_complexity": 2
+      },
+      "functions": [
+        {
+          "name": "main",
+          "line_number": 5,
+          "cyclomatic_complexity": 2,
+          "lines_of_code": 33,
+          "max_nesting_depth": 0
+        }
+      ]
+    },
+    {
+      "file": "/Users/dylanpeek/ai-agent/test_get_files_info.py",
+      "summary": {
+        "total_functions": 1,
+        "average_complexity": 1.0,
+        "highest_complexity": 1
+      },
+      "functions": [
+        {
+          "name": "main",
+          "line_number": 7,
+          "cyclomatic_complexity": 1,
+          "lines_of_code": 17,
+          "max_nesting_depth": 0
+        }
+      ]
+    },
+    {
+      "file": "/Users/dylanpeek/ai-agent/test_run_python_file.py",
+      "summary": {
+        "total_functions": 1,
+        "average_complexity": 1.0,
+        "highest_complexity": 1
+      },
+      "functions": [
+        {
+          "name": "main",
+          "line_number": 4,
+          "cyclomatic_complexity": 1,
+          "lines_of_code": 32,
+          "max_nesting_depth": 0
+        }
+      ]
+    },
+    {
+      "file": "/Users/dylanpeek/ai-agent/test_write_file.py",
+      "summary": {
+        "total_functions": 1,
+        "average_complexity": 1.0,
+        "highest_complexity": 1
+      },
+      "functions": [
+        {
+          "name": "main",
+          "line_number": 5,
+          "cyclomatic_complexity": 1,
+          "lines_of_code": 24,
+          "max_nesting_depth": 0
+        }
+      ]
+    }
+  ]
+}

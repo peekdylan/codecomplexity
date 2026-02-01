@@ -1,0 +1,280 @@
+{
+  "timestamp": "2026-02-01T17:58:29.809155",
+  "summary": {
+    "total_files": 10,
+    "total_functions": 27,
+    "average_complexity": 2.48,
+    "highest_complexity": 21
+  },
+  "files": [
+    {
+      "file": "/Users/dylanpeek/asteroids-game/asteriod.py",
+      "summary": {
+        "total_functions": 3,
+        "average_complexity": 1.33,
+        "highest_complexity": 2
+      },
+      "functions": [
+        {
+          "name": "__init__",
+          "line_number": 32,
+          "cyclomatic_complexity": 1,
+          "lines_of_code": 3,
+          "max_nesting_depth": 0
+        },
+        {
+          "name": "spawn",
+          "line_number": 38,
+          "cyclomatic_complexity": 1,
+          "lines_of_code": 3,
+          "max_nesting_depth": 0
+        },
+        {
+          "name": "update",
+          "line_number": 44,
+          "cyclomatic_complexity": 2,
+          "lines_of_code": 11,
+          "max_nesting_depth": 0
+        }
+      ]
+    },
+    {
+      "file": "/Users/dylanpeek/asteroids-game/asteroid.py",
+      "summary": {
+        "total_functions": 4,
+        "average_complexity": 1.25,
+        "highest_complexity": 2
+      },
+      "functions": [
+        {
+          "name": "__init__",
+          "line_number": 9,
+          "cyclomatic_complexity": 1,
+          "lines_of_code": 2,
+          "max_nesting_depth": 0
+        },
+        {
+          "name": "draw",
+          "line_number": 12,
+          "cyclomatic_complexity": 1,
+          "lines_of_code": 2,
+          "max_nesting_depth": 0
+        },
+        {
+          "name": "update",
+          "line_number": 15,
+          "cyclomatic_complexity": 1,
+          "lines_of_code": 2,
+          "max_nesting_depth": 0
+        },
+        {
+          "name": "split",
+          "line_number": 18,
+          "cyclomatic_complexity": 2,
+          "lines_of_code": 20,
+          "max_nesting_depth": 0
+        }
+      ]
+    },
+    {
+      "file": "/Users/dylanpeek/asteroids-game/asteroidfield.py",
+      "summary": {
+        "total_functions": 3,
+        "average_complexity": 1.33,
+        "highest_complexity": 2
+      },
+      "functions": [
+        {
+          "name": "__init__",
+          "line_number": 27,
+          "cyclomatic_complexity": 1,
+          "lines_of_code": 3,
+          "max_nesting_depth": 0
+        },
+        {
+          "name": "spawn",
+          "line_number": 31,
+          "cyclomatic_complexity": 1,
+          "lines_of_code": 3,
+          "max_nesting_depth": 0
+        },
+        {
+          "name": "update",
+          "line_number": 35,
+          "cyclomatic_complexity": 2,
+          "lines_of_code": 10,
+          "max_nesting_depth": 0
+        }
+      ]
+    },
+    {
+      "file": "/Users/dylanpeek/asteroids-game/circleshape.py",
+      "summary": {
+        "total_functions": 4,
+        "average_complexity": 1.25,
+        "highest_complexity": 2
+      },
+      "functions": [
+        {
+          "name": "__init__",
+          "line_number": 5,
+          "cyclomatic_complexity": 2,
+          "lines_of_code": 8,
+          "max_nesting_depth": 0
+        },
+        {
+          "name": "draw",
+          "line_number": 15,
+          "cyclomatic_complexity": 1,
+          "lines_of_code": 2,
+          "max_nesting_depth": 0
+        },
+        {
+          "name": "update",
+          "line_number": 19,
+          "cyclomatic_complexity": 1,
+          "lines_of_code": 2,
+          "max_nesting_depth": 0
+        },
+        {
+          "name": "collides_with",
+          "line_number": 23,
+          "cyclomatic_complexity": 1,
+          "lines_of_code": 3,
+          "max_nesting_depth": 0
+        }
+      ]
+    },
+    {
+      "file": "/Users/dylanpeek/asteroids-game/logger.py",
+      "summary": {
+        "total_functions": 2,
+        "average_complexity": 11.0,
+        "highest_complexity": 21
+      },
+      "functions": [
+        {
+          "name": "log_state",
+          "line_number": 18,
+          "cyclomatic_complexity": 21,
+          "lines_of_code": 69,
+          "max_nesting_depth": 0
+        },
+        {
+          "name": "log_event",
+          "line_number": 118,
+          "cyclomatic_complexity": 1,
+          "lines_of_code": 14,
+          "max_nesting_depth": 0
+        }
+      ]
+    },
+    {
+      "file": "/Users/dylanpeek/asteroids-game/main.py",
+      "summary": {
+        "total_functions": 1,
+        "average_complexity": 11.0,
+        "highest_complexity": 11
+      },
+      "functions": [
+        {
+          "name": "main",
+          "line_number": 11,
+          "cyclomatic_complexity": 11,
+          "lines_of_code": 38,
+          "max_nesting_depth": 0
+        }
+      ]
+    },
+    {
+      "file": "/Users/dylanpeek/asteroids-game/player.py",
+      "summary": {
+        "total_functions": 7,
+        "average_complexity": 1.86,
+        "highest_complexity": 6
+      },
+      "functions": [
+        {
+          "name": "__init__",
+          "line_number": 14,
+          "cyclomatic_complexity": 1,
+          "lines_of_code": 4,
+          "max_nesting_depth": 0
+        },
+        {
+          "name": "triangle",
+          "line_number": 19,
+          "cyclomatic_complexity": 1,
+          "lines_of_code": 7,
+          "max_nesting_depth": 0
+        },
+        {
+          "name": "draw",
+          "line_number": 27,
+          "cyclomatic_complexity": 1,
+          "lines_of_code": 2,
+          "max_nesting_depth": 0
+        },
+        {
+          "name": "rotate",
+          "line_number": 30,
+          "cyclomatic_complexity": 1,
+          "lines_of_code": 2,
+          "max_nesting_depth": 0
+        },
+        {
+          "name": "update",
+          "line_number": 33,
+          "cyclomatic_complexity": 6,
+          "lines_of_code": 13,
+          "max_nesting_depth": 0
+        },
+        {
+          "name": "move",
+          "line_number": 50,
+          "cyclomatic_complexity": 1,
+          "lines_of_code": 3,
+          "max_nesting_depth": 0
+        },
+        {
+          "name": "shoot",
+          "line_number": 54,
+          "cyclomatic_complexity": 2,
+          "lines_of_code": 6,
+          "max_nesting_depth": 0
+        }
+      ]
+    },
+    {
+      "file": "/Users/dylanpeek/asteroids-game/shot.py",
+      "summary": {
+        "total_functions": 3,
+        "average_complexity": 1.0,
+        "highest_complexity": 1
+      },
+      "functions": [
+        {
+          "name": "__init__",
+          "line_number": 8,
+          "cyclomatic_complexity": 1,
+          "lines_of_code": 3,
+          "max_nesting_depth": 0
+        },
+        {
+          "name": "draw",
+          "line_number": 13,
+          "cyclomatic_complexity": 1,
+          "lines_of_code": 2,
+          "max_nesting_depth": 0
+        },
+        {
+          "name": "update",
+          "line_number": 17,
+          "cyclomatic_complexity": 1,
+          "lines_of_code": 2,
+          "max_nesting_depth": 0
+        }
+      ]
+    }
+  ]
+}
