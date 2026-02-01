@@ -1,0 +1,230 @@
+{
+  "timestamp": "2026-02-01T16:34:35.899855",
+  "summary": {
+    "total_files": 5,
+    "total_functions": 27,
+    "average_complexity": 2.96,
+    "highest_complexity": 16
+  },
+  "files": [
+    {
+      "file": "codecomplexity/analyzer.py",
+      "summary": {
+        "total_functions": 11,
+        "average_complexity": 1.64,
+        "highest_complexity": 3
+      },
+      "functions": [
+        {
+          "name": "__init__",
+          "line_number": 35,
+          "cyclomatic_complexity": 1,
+          "lines_of_code": 15,
+          "max_nesting_depth": 0
+        },
+        {
+          "name": "__init__",
+          "line_number": 77,
+          "cyclomatic_complexity": 1,
+          "lines_of_code": 14,
+          "max_nesting_depth": 0
+        },
+        {
+          "name": "visit_FunctionDef",
+          "line_number": 95,
+          "cyclomatic_complexity": 1,
+          "lines_of_code": 29,
+          "max_nesting_depth": 0
+        },
+        {
+          "name": "visit_If",
+          "line_number": 152,
+          "cyclomatic_complexity": 2,
+          "lines_of_code": 17,
+          "max_nesting_depth": 0
+        },
+        {
+          "name": "visit_For",
+          "line_number": 182,
+          "cyclomatic_complexity": 2,
+          "lines_of_code": 15,
+          "max_nesting_depth": 0
+        },
+        {
+          "name": "visit_While",
+          "line_number": 204,
+          "cyclomatic_complexity": 2,
+          "lines_of_code": 15,
+          "max_nesting_depth": 0
+        },
+        {
+          "name": "visit_ExceptHandler",
+          "line_number": 226,
+          "cyclomatic_complexity": 2,
+          "lines_of_code": 16,
+          "max_nesting_depth": 0
+        },
+        {
+          "name": "visit_With",
+          "line_number": 250,
+          "cyclomatic_complexity": 1,
+          "lines_of_code": 13,
+          "max_nesting_depth": 0
+        },
+        {
+          "name": "visit_BoolOp",
+          "line_number": 268,
+          "cyclomatic_complexity": 2,
+          "lines_of_code": 17,
+          "max_nesting_depth": 0
+        },
+        {
+          "name": "_calculate_loc",
+          "line_number": 297,
+          "cyclomatic_complexity": 3,
+          "lines_of_code": 33,
+          "max_nesting_depth": 0
+        },
+        {
+          "name": "analyze_python_file",
+          "line_number": 352,
+          "cyclomatic_complexity": 1,
+          "lines_of_code": 29,
+          "max_nesting_depth": 0
+        }
+      ]
+    },
+    {
+      "file": "codecomplexity/cli.py",
+      "summary": {
+        "total_functions": 9,
+        "average_complexity": 5.0,
+        "highest_complexity": 16
+      },
+      "functions": [
+        {
+          "name": "create_parser",
+          "line_number": 30,
+          "cyclomatic_complexity": 1,
+          "lines_of_code": 93,
+          "max_nesting_depth": 0
+        },
+        {
+          "name": "format_metrics_output",
+          "line_number": 153,
+          "cyclomatic_complexity": 16,
+          "lines_of_code": 114,
+          "max_nesting_depth": 0
+        },
+        {
+          "name": "format_project_output",
+          "line_number": 309,
+          "cyclomatic_complexity": 7,
+          "lines_of_code": 59,
+          "max_nesting_depth": 0
+        },
+        {
+          "name": "export_to_json",
+          "line_number": 387,
+          "cyclomatic_complexity": 1,
+          "lines_of_code": 46,
+          "max_nesting_depth": 0
+        },
+        {
+          "name": "export_project_to_json",
+          "line_number": 445,
+          "cyclomatic_complexity": 3,
+          "lines_of_code": 49,
+          "max_nesting_depth": 0
+        },
+        {
+          "name": "analyze_command",
+          "line_number": 506,
+          "cyclomatic_complexity": 7,
+          "lines_of_code": 42,
+          "max_nesting_depth": 0
+        },
+        {
+          "name": "show_progress",
+          "line_number": 602,
+          "cyclomatic_complexity": 1,
+          "lines_of_code": 2,
+          "max_nesting_depth": 0
+        },
+        {
+          "name": "scan_command",
+          "line_number": 569,
+          "cyclomatic_complexity": 5,
+          "lines_of_code": 39,
+          "max_nesting_depth": 0
+        },
+        {
+          "name": "main",
+          "line_number": 633,
+          "cyclomatic_complexity": 4,
+          "lines_of_code": 21,
+          "max_nesting_depth": 0
+        }
+      ]
+    },
+    {
+      "file": "codecomplexity/scanner.py",
+      "summary": {
+        "total_functions": 7,
+        "average_complexity": 2.43,
+        "highest_complexity": 5
+      },
+      "functions": [
+        {
+          "name": "__init__",
+          "line_number": 32,
+          "cyclomatic_complexity": 1,
+          "lines_of_code": 8,
+          "max_nesting_depth": 0
+        },
+        {
+          "name": "add_file",
+          "line_number": 42,
+          "cyclomatic_complexity": 1,
+          "lines_of_code": 11,
+          "max_nesting_depth": 0
+        },
+        {
+          "name": "get_all_functions",
+          "line_number": 56,
+          "cyclomatic_complexity": 2,
+          "lines_of_code": 11,
+          "max_nesting_depth": 0
+        },
+        {
+          "name": "get_average_complexity",
+          "line_number": 70,
+          "cyclomatic_complexity": 2,
+          "lines_of_code": 12,
+          "max_nesting_depth": 0
+        },
+        {
+          "name": "get_max_complexity",
+          "line_number": 86,
+          "cyclomatic_complexity": 2,
+          "lines_of_code": 11,
+          "max_nesting_depth": 0
+        },
+        {
+          "name": "find_python_files",
+          "line_number": 102,
+          "cyclomatic_complexity": 5,
+          "lines_of_code": 40,
+          "max_nesting_depth": 0
+        },
+        {
+          "name": "analyze_directory",
+          "line_number": 157,
+          "cyclomatic_complexity": 4,
+          "lines_of_code": 35,
+          "max_nesting_depth": 0
+        }
+      ]
+    }
+  ]
+}

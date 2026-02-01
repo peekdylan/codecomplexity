@@ -1,0 +1,88 @@
+{
+  "file": "codecomplexity/analyzer.py",
+  "timestamp": "2026-02-01T16:28:00.327264",
+  "summary": {
+    "total_functions": 11,
+    "average_complexity": 1.64,
+    "highest_complexity": 3
+  },
+  "functions": [
+    {
+      "name": "__init__",
+      "line_number": 35,
+      "cyclomatic_complexity": 1,
+      "lines_of_code": 15,
+      "max_nesting_depth": 0
+    },
+    {
+      "name": "__init__",
+      "line_number": 77,
+      "cyclomatic_complexity": 1,
+      "lines_of_code": 14,
+      "max_nesting_depth": 0
+    },
+    {
+      "name": "visit_FunctionDef",
+      "line_number": 95,
+      "cyclomatic_complexity": 1,
+      "lines_of_code": 29,
+      "max_nesting_depth": 0
+    },
+    {
+      "name": "visit_If",
+      "line_number": 152,
+      "cyclomatic_complexity": 2,
+      "lines_of_code": 17,
+      "max_nesting_depth": 0
+    },
+    {
+      "name": "visit_For",
+      "line_number": 182,
+      "cyclomatic_complexity": 2,
+      "lines_of_code": 15,
+      "max_nesting_depth": 0
+    },
+    {
+      "name": "visit_While",
+      "line_number": 204,
+      "cyclomatic_complexity": 2,
+      "lines_of_code": 15,
+      "max_nesting_depth": 0
+    },
+    {
+      "name": "visit_ExceptHandler",
+      "line_number": 226,
+      "cyclomatic_complexity": 2,
+      "lines_of_code": 16,
+      "max_nesting_depth": 0
+    },
+    {
+      "name": "visit_With",
+      "line_number": 250,
+      "cyclomatic_complexity": 1,
+      "lines_of_code": 13,
+      "max_nesting_depth": 0
+    },
+    {
+      "name": "visit_BoolOp",
+      "line_number": 268,
+      "cyclomatic_complexity": 2,
+      "lines_of_code": 17,
+      "max_nesting_depth": 0
+    },
+    {
+      "name": "_calculate_loc",
+      "line_number": 297,
+      "cyclomatic_complexity": 3,
+      "lines_of_code": 33,
+      "max_nesting_depth": 0
+    },
+    {
+      "name": "analyze_python_file",
+      "line_number": 352,
+      "cyclomatic_complexity": 1,
+      "lines_of_code": 29,
+      "max_nesting_depth": 0
+    }
+  ]
+}
