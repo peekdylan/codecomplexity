@@ -6,7 +6,7 @@ It handles argument parsing, user input validation, and output formatting.
 
 Author: Dylan
 Created: January 31, 2026
-Last Modified: January 31, 2026
+Last Modified: February 1, 2026
 """
 
 import sys
@@ -20,6 +20,7 @@ from typing import List
 from colorama import Fore, Style, init
 
 from .analyzer import analyze_python_file, FunctionMetrics
+from .scanner import analyze_directory, ProjectMetrics
 
 # Initialize colorama for cross-platform color support
 # Created: January 31, 2026
@@ -37,7 +38,7 @@ def create_parser() -> argparse.ArgumentParser:
         argparse.ArgumentParser: Configured argument parser
         
     Created: January 31, 2026
-    Last Modified: January 31, 2026
+    Last Modified: February 1, 2026
     """
     parser = argparse.ArgumentParser(
         prog='codecomplexity',
@@ -98,6 +99,52 @@ def create_parser() -> argparse.ArgumentParser:
         '-o',
         type=str,
         help='Export results to JSON file (e.g., --output results.json)'
+    )
+    
+    # 'scan' subcommand for analyzing directories
+    scan_parser = subparsers.add_parser(
+        'scan',
+        help='Scan a directory and analyze all Python files'
+    )
+    
+    scan_parser.add_argument(
+        'directory',
+        type=str,
+        help='Path to the directory to scan'
+    )
+    
+    scan_parser.add_argument(
+        '--no-recursive',
+        action='store_true',
+        help='Only scan the immediate directory, not subdirectories'
+    )
+    
+    scan_parser.add_argument(
+        '--complexity-threshold',
+        type=int,
+        default=10,
+        help='Complexity threshold for warnings (default: 10)'
+    )
+    
+    scan_parser.add_argument(
+        '--loc-threshold',
+        type=int,
+        default=50,
+        help='Lines of code threshold for warnings (default: 50)'
+    )
+    
+    scan_parser.add_argument(
+        '--nesting-threshold',
+        type=int,
+        default=4,
+        help='Nesting depth threshold for warnings (default: 4)'
+    )
+    
+    scan_parser.add_argument(
+        '--output',
+        '-o',
+        type=str,
+        help='Export results to JSON file'
     )
     
     return parser
@@ -259,6 +306,84 @@ def format_metrics_output(
     return "\n".join(lines)
 
 
+def format_project_output(
+    project: ProjectMetrics,
+    complexity_threshold: int,
+    loc_threshold: int,
+    nesting_threshold: int
+) -> str:
+    """
+    Format project-wide metrics into a readable report.
+    
+    This function creates a summary report for an entire project,
+    showing file-by-file statistics and overall project health.
+    
+    Args:
+        project: ProjectMetrics object containing all file metrics
+        complexity_threshold: Complexity threshold for warnings
+        loc_threshold: Lines of code threshold for warnings
+        nesting_threshold: Nesting depth threshold for warnings
+        
+    Returns:
+        str: Formatted, colorized project report
+        
+    Created: February 1, 2026
+    """
+    lines = []
+    lines.append(f"{Fore.CYAN}{'=' * 80}")
+    lines.append(f"{Fore.CYAN}PROJECT COMPLEXITY ANALYSIS")
+    lines.append(f"{Fore.CYAN}{'=' * 80}")
+    lines.append("")
+    
+    # Project-wide summary
+    lines.append(f"{Fore.CYAN}PROJECT SUMMARY")
+    lines.append(f"{Fore.CYAN}{'-' * 80}")
+    lines.append(f"Total Files Analyzed: {project.total_files}")
+    lines.append(f"Total Functions: {project.total_functions}")
+    lines.append(f"Average Complexity: {project.get_average_complexity():.2f}")
+    lines.append(f"Highest Complexity: {project.get_max_complexity()}")
+    lines.append("")
+    
+    # Per-file breakdown
+    lines.append(f"{Fore.CYAN}FILE BREAKDOWN")
+    lines.append(f"{Fore.CYAN}{'-' * 80}")
+    
+    # Sort files by average complexity
+    file_stats = []
+    for filepath, metrics in project.file_metrics.items():
+        if metrics:
+            avg_complexity = sum(m.cyclomatic_complexity for m in metrics) / len(metrics)
+            max_complexity = max(m.cyclomatic_complexity for m in metrics)
+            warning_count = sum(
+                1 for m in metrics
+                if (m.cyclomatic_complexity > complexity_threshold or
+                    m.lines_of_code > loc_threshold or
+                    m.max_nesting_depth > nesting_threshold)
+            )
+            file_stats.append((filepath, len(metrics), avg_complexity, max_complexity, warning_count))
+    
+    # Sort by warning count (descending), then by max complexity
+    file_stats.sort(key=lambda x: (x[4], x[3]), reverse=True)
+    
+    for filepath, func_count, avg_complexity, max_complexity, warning_count in file_stats:
+        # Color code based on warnings
+        if warning_count > 0:
+            file_color = Fore.YELLOW
+            status = f"⚠️  {warning_count} warnings"
+        else:
+            file_color = Fore.GREEN
+            status = "✓ OK"
+        
+        lines.append(f"{file_color}{filepath}")
+        lines.append(f"  Functions: {func_count} | Avg Complexity: {avg_complexity:.2f} | "
+                    f"Max: {max_complexity} | {status}{Style.RESET_ALL}")
+        lines.append("")
+    
+    lines.append(f"{Fore.CYAN}{'=' * 80}")
+    
+    return "\n".join(lines)
+
+
 def export_to_json(
     metrics: List[FunctionMetrics],
     filepath: Path,
@@ -315,6 +440,67 @@ def export_to_json(
         json.dump(data, f, indent=2)
     
     print(f"{Fore.GREEN}✓ Results exported to {output_file}{Style.RESET_ALL}")
+
+
+def export_project_to_json(
+    project: ProjectMetrics,
+    output_file: str
+) -> None:
+    """
+    Export project-wide metrics to a JSON file.
+    
+    This function exports all metrics for a scanned project directory
+    into a structured JSON format.
+    
+    Args:
+        project: ProjectMetrics object containing all file metrics
+        output_file: Path where JSON should be written
+        
+    Created: February 1, 2026
+    """
+    # Build the JSON structure
+    data = {
+        "timestamp": __import__('datetime').datetime.now().isoformat(),
+        "summary": {
+            "total_files": project.total_files,
+            "total_functions": project.total_functions,
+            "average_complexity": round(project.get_average_complexity(), 2),
+            "highest_complexity": project.get_max_complexity()
+        },
+        "files": []
+    }
+    
+    # Add each file's metrics
+    for filepath, metrics in project.file_metrics.items():
+        if metrics:
+            avg_complexity = sum(m.cyclomatic_complexity for m in metrics) / len(metrics)
+            max_complexity = max(m.cyclomatic_complexity for m in metrics)
+            
+            file_data = {
+                "file": str(filepath),
+                "summary": {
+                    "total_functions": len(metrics),
+                    "average_complexity": round(avg_complexity, 2),
+                    "highest_complexity": max_complexity
+                },
+                "functions": [
+                    {
+                        "name": m.name,
+                        "line_number": m.lineno,
+                        "cyclomatic_complexity": m.cyclomatic_complexity,
+                        "lines_of_code": m.lines_of_code,
+                        "max_nesting_depth": m.max_nesting_depth
+                    }
+                    for m in metrics
+                ]
+            }
+            data["files"].append(file_data)
+    
+    # Write to file with nice formatting
+    with open(output_file, 'w', encoding='utf-8') as f:
+        json.dump(data, f, indent=2)
+    
+    print(f"{Fore.GREEN}✓ Project results exported to {output_file}{Style.RESET_ALL}")
 
 
 def analyze_command(args: argparse.Namespace) -> int:
@@ -380,6 +566,70 @@ def analyze_command(args: argparse.Namespace) -> int:
         return 1
 
 
+def scan_command(args: argparse.Namespace) -> int:
+    """
+    Execute the 'scan' command.
+    
+    This function is called when the user runs 'codecomplexity scan <directory>'.
+    It scans a directory for Python files and analyzes them all.
+    
+    Args:
+        args: Parsed command-line arguments from argparse
+        
+    Returns:
+        int: Exit code (0 for success, 1 for error)
+        
+    Created: February 1, 2026
+    """
+    # Convert the directory string to a Path object
+    directory = Path(args.directory)
+    
+    # Validate that the directory exists
+    if not directory.exists():
+        print(f"{Fore.RED}Error: Directory '{directory}' not found.{Style.RESET_ALL}", file=sys.stderr)
+        return 1
+    
+    # Validate that it's actually a directory
+    if not directory.is_dir():
+        print(f"{Fore.RED}Error: '{directory}' is not a directory.{Style.RESET_ALL}", file=sys.stderr)
+        return 1
+    
+    try:
+        # Determine if we should recurse
+        recursive = not args.no_recursive
+        
+        # Progress callback to show which file we're analyzing
+        def show_progress(filepath: Path, total: int, current: int):
+            print(f"{Fore.CYAN}[{current}/{total}] Analyzing {filepath}...{Style.RESET_ALL}")
+        
+        # Run the analysis
+        print(f"{Fore.CYAN}Scanning directory: {directory}{Style.RESET_ALL}")
+        print(f"{Fore.CYAN}Recursive: {recursive}{Style.RESET_ALL}\n")
+        
+        project = analyze_directory(directory, recursive, show_progress)
+        
+        print("")  # Blank line after progress
+        
+        # If JSON output requested, export to file
+        if args.output:
+            export_project_to_json(project, args.output)
+        
+        # Show the terminal output
+        output = format_project_output(
+            project,
+            args.complexity_threshold,
+            args.loc_threshold,
+            args.nesting_threshold
+        )
+        print(output)
+        
+        return 0
+        
+    except Exception as e:
+        print(f"{Fore.RED}Error: Failed to scan directory: {e}{Style.RESET_ALL}", file=sys.stderr)
+        return 1
+
+
 def main() -> int:
     """
     Main entry point for the CLI application.
@@ -391,6 +641,7 @@ def main() -> int:
         int: Exit code to return to the operating system
         
     Created: January 31, 2026
+    Last Modified: February 1, 2026
     """
     parser = create_parser()
     args = parser.parse_args()
@@ -403,6 +654,8 @@ def main() -> int:
     # Dispatch to the appropriate command handler
     if args.command == 'analyze':
         return analyze_command(args)
+    elif args.command == 'scan':
+        return scan_command(args)
     
     # This shouldn't happen, but just in case
     print(f"{Fore.RED}Error: Unknown command '{args.command}'{Style.RESET_ALL}", file=sys.stderr)
