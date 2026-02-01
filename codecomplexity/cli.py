@@ -22,6 +22,13 @@ from colorama import Fore, Style, init
 from .analyzer import analyze_python_file, FunctionMetrics
 from .scanner import analyze_directory, ProjectMetrics
 
+# Try to import C analyzer, but don't fail if pycparser isn't installed
+try:
+    from .c_analyzer import analyze_c_file
+    C_SUPPORT = True
+except ImportError:
+    C_SUPPORT = False
+
 # Initialize colorama for cross-platform color support
 # Created: January 31, 2026
 init(autoreset=True)
@@ -42,7 +49,7 @@ def create_parser() -> argparse.ArgumentParser:
     """
     parser = argparse.ArgumentParser(
         prog='codecomplexity',
-        description='Analyze code complexity metrics for Python files',
+        description='Analyze code complexity metrics for Python and C files',
         epilog='Example: codecomplexity analyze my_script.py'
     )
     
@@ -52,14 +59,14 @@ def create_parser() -> argparse.ArgumentParser:
     # 'analyze' subcommand
     analyze_parser = subparsers.add_parser(
         'analyze',
-        help='Analyze a Python file for complexity metrics'
+        help='Analyze a Python or C file for complexity metrics'
     )
     
     # Required argument: the file to analyze
     analyze_parser.add_argument(
         'filepath',
         type=str,
-        help='Path to the Python file to analyze'
+        help='Path to the Python or C file to analyze'
     )
     
     # Optional: complexity threshold for warnings
@@ -145,6 +152,12 @@ def create_parser() -> argparse.ArgumentParser:
         '-o',
         type=str,
         help='Export results to JSON file'
+    )
+    
+    scan_parser.add_argument(
+        '--include-c',
+        action='store_true',
+        help='Also analyze C source files (.c and .h)'
     )
     
     return parser
@@ -517,7 +530,7 @@ def analyze_command(args: argparse.Namespace) -> int:
         int: Exit code (0 for success, 1 for error)
         
     Created: January 31, 2026
-    Last Modified: January 31, 2026
+    Last Modified: February 1, 2026
     """
     # Convert the filepath string to a Path object
     filepath = Path(args.filepath)
@@ -532,15 +545,28 @@ def analyze_command(args: argparse.Namespace) -> int:
         print(f"{Fore.RED}Error: '{filepath}' is not a file.{Style.RESET_ALL}", file=sys.stderr)
         return 1
     
-    # Validate that it's a Python file
-    if filepath.suffix != '.py':
-        print(f"{Fore.YELLOW}Warning: '{filepath}' doesn't have a .py extension.{Style.RESET_ALL}", file=sys.stderr)
-        print("Attempting to analyze anyway...", file=sys.stderr)
+    # Determine file type and validate
+    is_python = filepath.suffix == '.py'
+    is_c = filepath.suffix in ['.c', '.h']
+    
+    if not is_python and not is_c:
+        print(f"{Fore.YELLOW}Warning: '{filepath}' doesn't have a .py, .c, or .h extension.{Style.RESET_ALL}", file=sys.stderr)
+        print("Attempting to analyze as Python anyway...", file=sys.stderr)
+        is_python = True
+    
+    # Check if C support is available
+    if is_c and not C_SUPPORT:
+        print(f"{Fore.RED}Error: C support requires pycparser. Install with: uv add pycparser{Style.RESET_ALL}", file=sys.stderr)
+        return 1
     
     try:
         # Run the analysis
         print(f"{Fore.CYAN}Analyzing {filepath}...{Style.RESET_ALL}\n")
-        metrics = analyze_python_file(filepath)
+        
+        if is_python:
+            metrics = analyze_python_file(filepath)
+        else:  # is_c
+            metrics = analyze_c_file(filepath)
         
         # If JSON output requested, export to file
         if args.output:
@@ -559,7 +585,7 @@ def analyze_command(args: argparse.Namespace) -> int:
         return 0
         
     except SyntaxError as e:
-        print(f"{Fore.RED}Error: Syntax error in Python file: {e}{Style.RESET_ALL}", file=sys.stderr)
+        print(f"{Fore.RED}Error: Syntax error in file: {e}{Style.RESET_ALL}", file=sys.stderr)
         return 1
     except Exception as e:
         print(f"{Fore.RED}Error: Failed to analyze file: {e}{Style.RESET_ALL}", file=sys.stderr)
@@ -571,7 +597,7 @@ def scan_command(args: argparse.Namespace) -> int:
     Execute the 'scan' command.
     
     This function is called when the user runs 'codecomplexity scan <directory>'.
-    It scans a directory for Python files and analyzes them all.
+    It scans a directory for source files and analyzes them all.
     
     Args:
         args: Parsed command-line arguments from argparse
@@ -594,6 +620,12 @@ def scan_command(args: argparse.Namespace) -> int:
         print(f"{Fore.RED}Error: '{directory}' is not a directory.{Style.RESET_ALL}", file=sys.stderr)
         return 1
     
+    # Check if C support is requested but not available
+    if args.include_c and not C_SUPPORT:
+        print(f"{Fore.YELLOW}Warning: C support requires pycparser. Install with: uv add pycparser{Style.RESET_ALL}", file=sys.stderr)
+        print(f"{Fore.YELLOW}Continuing with Python files only...{Style.RESET_ALL}\n", file=sys.stderr)
+        args.include_c = False
+    
     try:
         # Determine if we should recurse
         recursive = not args.no_recursive
@@ -604,9 +636,12 @@ def scan_command(args: argparse.Namespace) -> int:
         
         # Run the analysis
         print(f"{Fore.CYAN}Scanning directory: {directory}{Style.RESET_ALL}")
-        print(f"{Fore.CYAN}Recursive: {recursive}{Style.RESET_ALL}\n")
+        print(f"{Fore.CYAN}Recursive: {recursive}{Style.RESET_ALL}")
+        if args.include_c:
+            print(f"{Fore.CYAN}Including C files: Yes{Style.RESET_ALL}")
+        print("")
         
-        project = analyze_directory(directory, recursive, show_progress)
+        project = analyze_directory(directory, recursive, args.include_c, show_progress)
         
         print("")  # Blank line after progress
         

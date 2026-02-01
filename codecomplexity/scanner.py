@@ -2,7 +2,7 @@
 Code Complexity Analyzer - Directory Scanner
 
 This module provides functionality for scanning directories and analyzing
-multiple Python files in a project.
+multiple Python and C files in a project.
 
 Author: Dylan
 Created: February 1, 2026
@@ -12,6 +12,7 @@ Last Modified: February 1, 2026
 from pathlib import Path
 from typing import List, Dict
 from .analyzer import analyze_python_file, FunctionMetrics
+from .c_analyzer import analyze_c_file
 
 
 class ProjectMetrics:
@@ -23,7 +24,7 @@ class ProjectMetrics:
     
     Attributes:
         file_metrics: Dictionary mapping file paths to their function metrics
-        total_files: Total number of Python files analyzed
+        total_files: Total number of source files analyzed
         total_functions: Total number of functions across all files
         
     Created: February 1, 2026
@@ -99,20 +100,21 @@ class ProjectMetrics:
         return max(f.cyclomatic_complexity for f in all_functions)
 
 
-def find_python_files(directory: Path, recursive: bool = True) -> List[Path]:
+def find_source_files(directory: Path, recursive: bool = True, include_c: bool = False) -> List[Path]:
     """
-    Find all Python files in a directory.
+    Find all Python (and optionally C) source files in a directory.
     
-    This function scans a directory for .py files, optionally recursing
+    This function scans a directory for source files, optionally recursing
     into subdirectories. It skips common directories that typically don't
     contain source code (like virtual environments and cache directories).
     
     Args:
         directory: Path to the directory to scan
         recursive: If True, scan subdirectories recursively
+        include_c: If True, also find .c and .h files
         
     Returns:
-        List of Path objects pointing to Python files
+        List of Path objects pointing to source files
         
     Directories excluded from scanning:
     - .venv, venv, env (virtual environments)
@@ -122,6 +124,7 @@ def find_python_files(directory: Path, recursive: bool = True) -> List[Path]:
     - .tox, .pytest_cache (testing artifacts)
     
     Created: February 1, 2026
+    Last Modified: February 1, 2026
     """
     # Directories to skip during scanning
     # These typically contain generated code or dependencies
@@ -138,36 +141,45 @@ def find_python_files(directory: Path, recursive: bool = True) -> List[Path]:
         '*.egg-info'
     }
     
-    python_files = []
+    source_files = []
+    
+    # Define which extensions to search for
+    extensions = ['*.py']
+    if include_c:
+        extensions.extend(['*.c', '*.h'])
     
     if recursive:
-        # Recursively find all .py files
-        for path in directory.rglob('*.py'):
-            # Check if any parent directory is in skip_dirs
-            if not any(part in skip_dirs for part in path.parts):
-                python_files.append(path)
+        # Recursively find all source files
+        for ext in extensions:
+            for path in directory.rglob(ext):
+                # Check if any parent directory is in skip_dirs
+                if not any(part in skip_dirs for part in path.parts):
+                    source_files.append(path)
     else:
         # Only check the immediate directory
-        for path in directory.glob('*.py'):
-            python_files.append(path)
+        for ext in extensions:
+            for path in directory.glob(ext):
+                source_files.append(path)
     
-    return sorted(python_files)
+    return sorted(source_files)
 
 
 def analyze_directory(
     directory: Path,
     recursive: bool = True,
+    include_c: bool = False,
     progress_callback=None
 ) -> ProjectMetrics:
     """
-    Analyze all Python files in a directory.
+    Analyze all source files in a directory.
     
-    This function scans a directory for Python files and analyzes each one,
-    aggregating the results into a ProjectMetrics object.
+    This function scans a directory for Python (and optionally C) files
+    and analyzes each one, aggregating the results into a ProjectMetrics object.
     
     Args:
         directory: Path to the directory to analyze
         recursive: If True, analyze subdirectories recursively
+        include_c: If True, also analyze C source files
         progress_callback: Optional callback function called for each file
                           Signature: callback(current_file: Path, total_files: int, current_index: int)
         
@@ -181,27 +193,38 @@ def analyze_directory(
         >>> metrics = analyze_directory(Path("my_project"), progress_callback=show_progress)
         
     Created: February 1, 2026
+    Last Modified: February 1, 2026
     """
-    # Find all Python files in the directory
-    python_files = find_python_files(directory, recursive)
+    # Find all source files in the directory
+    source_files = find_source_files(directory, recursive, include_c)
     
     # Create project metrics object
     project = ProjectMetrics()
     
     # Analyze each file
-    total_files = len(python_files)
-    for index, filepath in enumerate(python_files, start=1):
+    total_files = len(source_files)
+    for index, filepath in enumerate(source_files, start=1):
         # Call progress callback if provided
         if progress_callback:
             progress_callback(filepath, total_files, index)
         
         try:
-            # Analyze the file
-            metrics = analyze_python_file(filepath)
+            # Determine file type and use appropriate analyzer
+            if filepath.suffix == '.py':
+                metrics = analyze_python_file(filepath)
+            elif filepath.suffix in ['.c', '.h']:
+                metrics = analyze_c_file(filepath)
+            else:
+                continue
+            
             project.add_file(filepath, metrics)
         except (SyntaxError, UnicodeDecodeError) as e:
             # Skip files that can't be parsed
             # In a production tool, you might want to log these errors
+            continue
+        except Exception as e:
+            # Skip files with any parsing errors
+            # This catches pycparser errors for C files
             continue
     
     return project
