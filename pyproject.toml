@@ -1,0 +1,19 @@
+[project]
+name = "codecomplexity"
+version = "0.1.0"
+description = "A CLI tool for analyzing code complexity metrics in Python codebases"
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+    "colorama>=0.4.6",
+]
+
+[project.scripts]
+codecomplexity = "codecomplexity.cli:main"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["codecomplexity"]
